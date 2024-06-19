@@ -37,7 +37,7 @@ dependencies:
   pencil_kit: ^2.1.0
   path_provider: ^2.1.3
   fluttertoast: ^8.2.6
-  flutter_riverpod:
+  get:
 
 dev_dependencies:
   flutter_test:
