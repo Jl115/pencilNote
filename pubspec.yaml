@@ -38,6 +38,7 @@ dependencies:
   path_provider: ^2.1.3
   fluttertoast: ^8.2.6
   get:
+  get_storage:
 
 dev_dependencies:
   flutter_test:
