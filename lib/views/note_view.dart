@@ -1,4 +1,4 @@
-/* import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:pencil_kit/pencil_kit.dart';
 
@@ -34,4 +34,3 @@ class NoteView extends StatelessWidget {
     );
   }
 }
- */
