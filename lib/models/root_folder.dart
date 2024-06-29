@@ -1,10 +1,26 @@
 import 'package:pencilkit_note_taking/models/base/base_folder.dart';
+import 'package:pencilkit_note_taking/models/folder.dart';
 import 'package:pencilkit_note_taking/models/text_note.dart';
+import 'dart:io';
 
 class RootFolder extends BaseFolder {
-  RootFolder(
-      {required String name, required String path, required List<Note> notes})
-      : super(name: name, path: path, notes: notes);
+  static final RootFolder _instance = RootFolder._internal(
+    path: File('root').path,
+    notes: [],
+    folders: [],
+  );
+
+  factory RootFolder() {
+    return _instance;
+  }
+
+  RootFolder._internal(
+      {required String path,
+      required List<Note> notes,
+      required List<Folder> folders})
+      : super(
+          path: path,
+        );
 
   @override
   void createFolder(String name) {

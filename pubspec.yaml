@@ -39,6 +39,7 @@ dependencies:
   fluttertoast: ^8.2.6
   get:
   get_storage:
+  flutter_file_dialog: ^3.0.2
 
 dev_dependencies:
   flutter_test:

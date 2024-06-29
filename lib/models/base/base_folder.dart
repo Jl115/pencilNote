@@ -1,11 +1,10 @@
 import 'package:pencilkit_note_taking/models/text_note.dart';
 
+/* BaseFolder is an abstract class that defines the properties and methods that a folder should have.  */
 abstract class BaseFolder {
-  String name;
   String path;
-  List<Note> notes;
 
-  BaseFolder({required this.name, required this.path, required this.notes});
+  BaseFolder({required this.path});
 
   createFolder(String name);
   changeFolderName(String name);

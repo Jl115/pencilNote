@@ -1,69 +1,43 @@
-import 'dart:io';
-
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pencil_kit/pencil_kit.dart';
-import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 
-class PencilKitControler extends GetxController {
-  late final PencilKitController controller;
-  ToolType currentToolType = ToolType.pen;
-  double currentWidth = 1.0;
-  Color currentColor = Colors.black;
-  String base64Image = '';
+class DrawController extends GetxController {
+  late PencilKitController _controller;
+  final _currentToolType = ToolType.pen.obs;
+  final _currentWidth = 1.0.obs;
+  final _currentColor = const Color.fromRGBO(0, 0, 0, 1).obs;
+  final _base64Image = ''.obs;
 
-  void showToolPicker() {
+  // Getters
+  PencilKitController get controller => _controller;
+  ToolType get currentToolType => _currentToolType.value;
+  double get currentWidth => _currentWidth.value;
+  Color get currentColor => _currentColor.value;
+  String get base64Image => _base64Image.value;
+
+  void show() {
     controller.show();
   }
 
-  void hideToolPicker() {
-    controller.hide();
+  // Setters
+  set controller(PencilKitController controller) {
+    _controller = controller;
   }
 
-  void undo() {
-    controller.undo();
+  set currentToolType(ToolType toolType) {
+    _currentToolType.value = toolType;
   }
 
-  void redo() {
-    controller.redo();
+  set currentWidth(double width) {
+    _currentWidth.value = width;
   }
 
-  void clear() {
-    controller.clear();
+  set currentColor(Color color) {
+    _currentColor.value = color;
   }
 
-  void setTool(ToolType toolType, double width, Color color) {
-    currentToolType = toolType;
-    currentWidth = width;
-    currentColor = color;
-    controller.setPKTool(toolType: toolType, width: width, color: color);
+  set base64Image(String image) {
+    _base64Image.value = image;
   }
-
-  Future<String> getBase64Data() async {
-    return await controller.getBase64Data();
-  }
-
-  Future<String> getBase64PngData() async {
-    return await controller.getBase64PngData();
-  }
-
-  Future<String> getBase64JpegData() async {
-    return await controller.getBase64JpegData();
-  }
-
-  Future<void> saveDrawing() async {
-    final Directory documentDir = await getApplicationDocumentsDirectory();
-    final String pathToSave = '${documentDir.path}/drawing';
-    await controller.save(uri: pathToSave, withBase64Data: true);
-  }
-
-  Future<void> loadDrawing() async {
-    final Directory documentDir = await getApplicationDocumentsDirectory();
-    final String pathToLoad = '${documentDir.path}/drawing';
-    await controller.load(uri: pathToLoad, withBase64Data: true);
-  }
-
-  // void loadBase64Drawing(String base64Data) {
-  //   controller.loadBase64PngData(base64Data);
-  // }
 }

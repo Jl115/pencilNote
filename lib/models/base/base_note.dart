@@ -1,3 +1,4 @@
+/* Abstract class for Notes */
 abstract class BaseNote {
   String title;
   String content;
