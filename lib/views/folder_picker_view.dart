@@ -21,31 +21,14 @@ class _FolderPickerViewState extends State<FolderPickerView> {
   Future<void> pickDirectory() async {
     String? selectedDirectoryPath =
         await FilePicker.platform.getDirectoryPath();
-
+    print(selectedDirectoryPath);
     if (selectedDirectoryPath != null) {
       setState(() {
         selectedDirectory = Directory(selectedDirectoryPath);
+        print(selectedDirectory);
         RootFolder.initializeWithPath(selectedDirectoryPath);
         folderController.selectedFolder.value = RootFolder();
-      });
-    }
-  }
-
-  Future<void> createRootDirectory() async {
-    final directory = await getApplicationDocumentsDirectory();
-    print(directory.path);
-
-    final newDirectory = Directory('${directory.path}/NewFolder');
-    print(newDirectory.path);
-    print(selectedDirectory?.path.split('/').last);
-    if (selectedDirectory != null) {
-      print('Directory already exists at ${newDirectory.path}');
-    } else {
-      await newDirectory.create();
-      setState(() {
-        createdDirectoryPath = newDirectory.path;
-        RootFolder.initializeWithPath(newDirectory.path);
-        folderController.selectedFolder.value = RootFolder();
+        createdDirectoryPath = selectedDirectoryPath;
       });
     }
   }
@@ -57,12 +40,25 @@ class _FolderPickerViewState extends State<FolderPickerView> {
           padding: const EdgeInsets.all(16.0),
           child: Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Select or Create a Root Folder',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        'Selected Directory: ${selectedDirectory?.path.split('/').last ?? 'None'}',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ],
                   ),
+                ),
+                Container(
+                  decoration: BoxDecoration(),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -80,21 +76,15 @@ class _FolderPickerViewState extends State<FolderPickerView> {
                       /* if (selectedDirectory != null)
                   Text('Selected Directory: ${selectedDirectory!.path}'), */
                       SizedBox(height: 10),
-                      //* Create Root Directory Button
-                      ElevatedButton(
-                        onPressed: createRootDirectory,
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                        ),
-                        child: Text('Create Folder'),
-                      ),
-                      SizedBox(height: 10),
-
                       //* Submitted Directory Path Button
                       ElevatedButton(
-                        onPressed: createRootDirectory,
+                        onPressed: () {
+                          if (createdDirectoryPath != null) {
+                            folderController
+                                .selectRootFolder(createdDirectoryPath!);
+                            Get.offNamed('/folder-detail');
+                          }
+                        },
                         style: ElevatedButton.styleFrom(
                           fixedSize: Size(100, 30),
                           backgroundColor: Colors.deepPurpleAccent[100],

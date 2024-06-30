@@ -28,10 +28,11 @@ class FolderController extends GetxController {
 
   void selectRootFolder(String path) {
     // Initialize the RootFolder with the selected path and subfolders
+    print('Selected path: $path');
     var newRootFolder = RootFolder()
       ..path = path
       ..folders = _getSubfolders(path);
-
+    print(newRootFolder);
     selectedFolder.value = newRootFolder;
   }
 
