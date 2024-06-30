@@ -5,7 +5,7 @@ import '../models/folder.dart';
 
 class CounterController extends GetxController {
   final GetStorage _storage = GetStorage();
-  Folder folder = Folder(path: '');
+  Folder folder = Folder(path: '', notes: [], subfolders: [], name: '');
 
   var count1 = 0.obs;
   var count2 = 0.obs;
