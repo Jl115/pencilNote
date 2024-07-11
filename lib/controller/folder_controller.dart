@@ -29,10 +29,13 @@ class FolderController extends GetxController {
   void selectRootFolder(String path) {
     // Initialize the RootFolder with the selected path and subfolders
     print('Selected path: $path');
+
+    RootFolder.initializeWithPath(path);
+
     var newRootFolder = RootFolder()
       ..path = path
       ..folders = _getSubfolders(path);
-    print(newRootFolder);
+    print(newRootFolder.folders[0].name);
     selectedFolder.value = newRootFolder;
   }
 
@@ -40,6 +43,7 @@ class FolderController extends GetxController {
     // Fetch the list of subfolders in the given path
     final directory = Directory(path);
     return directory.listSync().whereType<Directory>().map((dir) {
+      print(dir.path);
       return Folder(
           path: dir.path,
           name: dir.path.split('/').last,

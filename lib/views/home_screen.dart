@@ -1,31 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pencilkit_note_taking/components/side_bar.dart';
+import 'package:pencilkit_note_taking/controller/folder_controller.dart';
+import 'package:pencilkit_note_taking/models/root_folder.dart';
 import '../controller/counter_controller.dart';
 
 class HomePage extends StatelessWidget {
   final CounterController counterController = Get.put(CounterController());
-  var hasRootFolder = false.obs;
+  final FolderController folderController = Get.find<FolderController>();
   var isSidebarVisible = true.obs;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.only(top: 10.0, bottom: 10),
+        padding: const EdgeInsets.only(top: 10.0),
         child: Column(
           children: [
             const Text('Home Page', style: TextStyle(fontSize: 30)),
             Obx(() {
-              return !hasRootFolder.value
-                  ? IconButton(
-                      icon: const Icon(Icons.folder),
-                      onPressed: () {
-                        // Handle folder tap
-                        hasRootFolder.value = true; // Example action
-                      },
-                    )
-                  : LayoutBuilder(
+              return folderController.selectedFolder.value?.path != null
+                  ? LayoutBuilder(
                       builder: (context, constraints) {
                         return Row(
                           children: [
@@ -72,7 +67,8 @@ class HomePage extends StatelessWidget {
                                     ElevatedButton(
                                       onPressed:
                                           counterController.incrementCount3,
-                                      child: const Text('Increment Count3'),
+                                      child: const Text(
+                                          'Increment Counttesst counter hello darkness my old friend3'),
                                     ),
                                   ],
                                 ),
@@ -81,7 +77,8 @@ class HomePage extends StatelessWidget {
                           ],
                         );
                       },
-                    );
+                    )
+                  : const Text('No Root Folder Selected');
             }),
           ],
         ),

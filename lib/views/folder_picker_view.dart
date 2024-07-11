@@ -13,10 +13,11 @@ class FolderPickerView extends StatefulWidget {
 }
 
 class _FolderPickerViewState extends State<FolderPickerView> {
-  final FolderController folderController = Get.put(FolderController());
-
   Directory? selectedDirectory;
   String? createdDirectoryPath;
+
+  //controllers
+  final FolderController folderController = Get.find<FolderController>();
 
   Future<void> pickDirectory() async {
     String? selectedDirectoryPath =
@@ -26,7 +27,6 @@ class _FolderPickerViewState extends State<FolderPickerView> {
       setState(() {
         selectedDirectory = Directory(selectedDirectoryPath);
         print(selectedDirectory);
-        RootFolder.initializeWithPath(selectedDirectoryPath);
         folderController.selectedFolder.value = RootFolder();
         createdDirectoryPath = selectedDirectoryPath;
       });
@@ -94,8 +94,6 @@ class _FolderPickerViewState extends State<FolderPickerView> {
                         ),
                         child: Text('Submit'),
                       ),
-                      /* if (createdDirectoryPath != null)
-                  Text('Created Directory: $createdDirectoryPath'), */
                     ],
                   ),
                 )
