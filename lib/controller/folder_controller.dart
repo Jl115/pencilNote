@@ -1,11 +1,15 @@
 import 'package:get/get.dart';
 import 'package:pencilkit_note_taking/models/base/base_folder.dart';
+import 'package:pencilkit_note_taking/models/base/base_note.dart';
 import 'package:pencilkit_note_taking/models/folder.dart';
 import 'package:pencilkit_note_taking/models/root_folder.dart';
 import 'dart:io';
 
+import 'package:pencilkit_note_taking/models/text_note.dart';
+
 class FolderController extends GetxController {
   var folders = <BaseFolder>[].obs;
+  var notes = <BaseNote>[].obs;
   var selectedFolder = Rx<RootFolder?>(null);
 
   @override
@@ -36,6 +40,36 @@ class FolderController extends GetxController {
         );
         folders.add(createdFolder);
         selectedFolder.value!.folders.add(createdFolder);
+        update(); // Update the UI
+      } else {
+        // Handle case where folder already exists
+        print('Folder already exists');
+      }
+    } else {
+      print('No root folder selected');
+    }
+  }
+
+  void addNote(String noteName) {
+    if (selectedFolder.value != null) {
+      var newPath = '${selectedFolder.value?.path}/$noteName.md';
+      print(newPath);
+      var newNote = File(newPath);
+      print(newNote);
+      print(newNote.existsSync());
+      if (!newNote.existsSync()) {
+        print(1);
+        newNote.createSync();
+        var createdNote = Note(
+          notePath: newPath,
+          title: noteName,
+          dateCreated: DateTime.now(),
+          dateModified: DateTime.now(),
+          folderPath: selectedFolder.value!.path,
+          content: '',
+        );
+        notes.add(createdNote);
+        selectedFolder.value!.notes.add(createdNote);
         update(); // Update the UI
       } else {
         // Handle case where folder already exists

@@ -14,29 +14,55 @@ class Sidebar extends StatelessWidget {
     final double containerHeight = MediaQuery.of(context).size.height - 100;
 
     List<Widget> listFolders() {
-      return folderController.selectedFolder.value?.folders.map((folder) {
-            return ListTile(
-              leading: Icon(Icons.folder),
-              title: Text(folder.name),
-              onTap: () {
-                print('Tapped on folder: ${folder.name}');
-              },
-            );
-          }).toList() ??
-          [];
+      if (folderController.selectedFolder.value == null) {
+        return [];
+      }
+
+      List<Widget> items = [];
+
+      // Add folders
+      for (var folder in folderController.selectedFolder.value!.folders) {
+        items.add(
+          ListTile(
+            leading: Icon(Icons.folder),
+            title: Text(folder.name),
+            onTap: () {
+              print('Tapped on folder: ${folder.name}');
+            },
+          ),
+        );
+      }
+
+      // Add notes
+      for (var note in folderController.selectedFolder.value!.notes) {
+        items.add(
+          ListTile(
+            leading: Icon(Icons.insert_drive_file),
+            title: Text(note.title),
+            onTap: () {
+              print('Tapped on note: ${note.title}');
+            },
+          ),
+        );
+      }
+
+      return items;
     }
 
-    Future<void> showCreateFolderDialog(BuildContext context) async {
-      TextEditingController folderNameController = TextEditingController();
+    Future<void> showCreateFolderDialog(
+        BuildContext context, bool isFolder) async {
+      TextEditingController nameController = TextEditingController();
 
       return showDialog<void>(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Create New Folder'),
+            title:
+                isFolder ? Text('Create New Folder') : Text('Create New Note'),
             content: TextField(
-              controller: folderNameController,
-              decoration: InputDecoration(hintText: "Folder Name"),
+              controller: nameController,
+              decoration: InputDecoration(
+                  hintText: isFolder ? 'Folder Name' : 'Note Name'),
             ),
             actions: <Widget>[
               TextButton(
@@ -48,7 +74,11 @@ class Sidebar extends StatelessWidget {
               TextButton(
                 child: Text('Create'),
                 onPressed: () {
-                  folderController.addFolder(folderNameController.text);
+                  if (isFolder) {
+                    folderController.addFolder(nameController.text);
+                  } else {
+                    folderController.addNote(nameController.text);
+                  }
                   Navigator.of(context).pop();
                 },
               ),
@@ -71,14 +101,16 @@ class Sidebar extends StatelessWidget {
             children: [
               Expanded(
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showCreateFolderDialog(context, false);
+                  },
                   icon: Icon(Icons.note_add),
                 ),
               ),
               Expanded(
                 child: IconButton(
                   onPressed: () {
-                    showCreateFolderDialog(context);
+                    showCreateFolderDialog(context, true);
                   },
                   icon: Icon(Icons.create_new_folder),
                 ),
