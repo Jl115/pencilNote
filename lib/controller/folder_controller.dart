@@ -18,8 +18,32 @@ class FolderController extends GetxController {
     // Implementation for fetching folders if necessary
   }
 
-  void addFolder(BaseFolder folder) {
-    folders.add(folder);
+  void addFolder(String folderName) {
+    if (selectedFolder.value != null) {
+      var newPath = '${selectedFolder.value?.path}/$folderName';
+      print(newPath);
+      var newDirectory = Directory(newPath);
+      print(newDirectory);
+      print(newDirectory.existsSync());
+      if (!newDirectory.existsSync()) {
+        print(1);
+        newDirectory.createSync();
+        var createdFolder = Folder(
+          path: newPath,
+          name: folderName,
+          notes: [],
+          subfolders: [],
+        );
+        folders.add(createdFolder);
+        selectedFolder.value!.folders.add(createdFolder);
+        update(); // Update the UI
+      } else {
+        // Handle case where folder already exists
+        print('Folder already exists');
+      }
+    } else {
+      print('No root folder selected');
+    }
   }
 
   void removeFolder(BaseFolder folder) {

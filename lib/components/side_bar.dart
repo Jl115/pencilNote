@@ -26,6 +26,38 @@ class Sidebar extends StatelessWidget {
           [];
     }
 
+    Future<void> showCreateFolderDialog(BuildContext context) async {
+      TextEditingController folderNameController = TextEditingController();
+
+      return showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Create New Folder'),
+            content: TextField(
+              controller: folderNameController,
+              decoration: InputDecoration(hintText: "Folder Name"),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('Create'),
+                onPressed: () {
+                  folderController.addFolder(folderNameController.text);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     Positioned bottomIconBar() {
       return Positioned(
         bottom: 0,
@@ -37,18 +69,20 @@ class Sidebar extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.add),
+              Expanded(
+                child: IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.note_add),
+                ),
               ),
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.delete),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.edit),
-              ),
+              Expanded(
+                child: IconButton(
+                  onPressed: () {
+                    showCreateFolderDialog(context);
+                  },
+                  icon: Icon(Icons.create_new_folder),
+                ),
+              )
             ],
           ),
         ),
@@ -65,10 +99,10 @@ class Sidebar extends StatelessWidget {
                         color: Colors.grey[200],
                         height: containerHeight,
                         constraints: BoxConstraints(maxWidth: 500),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: listFolders(),
-                        ),
+                        child: Obx(() => Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: listFolders(),
+                            )),
                       ),
                       bottomIconBar(),
                       Positioned(
