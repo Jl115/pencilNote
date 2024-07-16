@@ -40,7 +40,7 @@ class FolderController extends GetxController {
         );
         folders.add(createdFolder);
         selectedFolder.value!.folders.add(createdFolder);
-        update(); // Update the UI
+        selectedFolder.refresh(); // Refresh the selected folder
       } else {
         // Handle case where folder already exists
         print('Folder already exists');
@@ -70,7 +70,7 @@ class FolderController extends GetxController {
         );
         notes.add(createdNote);
         selectedFolder.value!.notes.add(createdNote);
-        update(); // Update the UI
+        selectedFolder.refresh(); // Refresh the selected folder
       } else {
         // Handle case where folder already exists
         print('Folder already exists');
@@ -92,8 +92,9 @@ class FolderController extends GetxController {
 
     var newRootFolder = RootFolder()
       ..path = path
-      ..folders = _getSubfolders(path);
-    print(newRootFolder.folders[0].name);
+      ..folders = _getSubfolders(path)
+      ..notes = _getNotes(path); // Fetch initial notes
+
     selectedFolder.value = newRootFolder;
   }
 
@@ -107,6 +108,22 @@ class FolderController extends GetxController {
           name: dir.path.split('/').last,
           notes: [],
           subfolders: []);
+    }).toList();
+  }
+
+  List<Note> _getNotes(String path) {
+    // Fetch the list of notes in the given path
+    final directory = Directory(path);
+    return directory.listSync().whereType<File>().map((file) {
+      print(file.path);
+      return Note(
+        notePath: file.path,
+        title: file.path.split('/').last.split('.').first,
+        dateCreated: file.statSync().accessed,
+        dateModified: file.statSync().modified,
+        folderPath: path,
+        content: file.readAsStringSync(),
+      );
     }).toList();
   }
 }
